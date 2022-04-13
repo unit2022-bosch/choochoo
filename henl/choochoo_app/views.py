@@ -13,7 +13,7 @@ class LoadingView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(LoadingView, self).get_context_data(**kwargs)  # mostly useless
-        data = {
+        trains = {
             choice(
                 "Honza Pepa Ivan Vašek Roman Tomáš Radek Hynek Vojta Vítek Kamil".split()
             ): {
@@ -25,11 +25,11 @@ class LoadingView(TemplateView):
             }
             for i in range(10)
         }
-        context["data"] = data
+        context["trains"] = trains
         trains_to_load = Train.trains_to_be_loaded()
-        data = {}
+        trains = {}
         for train in trains_to_load:
-            data[train.human_id] = train.get_orders()
+            trains[train.human_id] = train.get_orders()
 
         return context
 
