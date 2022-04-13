@@ -1,7 +1,7 @@
 {% block head %}
 <head>
-    <link rel="stylesheet" href="{{ '/static/lib/dtsel/dtsel.css' }}" />
-    <script src="{{ '/static/lib/dtsel/dtsel.js' }}"></script>
+    <link rel="stylesheet" href="{{ '/static/libraries/dtsel/dtsel.css' }}" />
+    <script src="{{ '/static/libraries/dtsel/dtsel.js' }}"></script>
     <script type="module">
         let instance = new dtsel.DTS("input[id='id_time']", {
             showTime: true,
@@ -11,22 +11,38 @@
 </head>
 {% endblock %}
 
-<form method="post">
-{{ csrf_input }}
-{% if multiple_warehouses %}
-    {{ form.warehouse.label }}
-    {{ form.warehouse }}
-{% endif %}
-{{ form.time.label }}
-{{ form.time }}
-{{ form.amount.label }}
-{{ form.amount }}
-{{ form.material.label }}
-{{ form.material }}
-<button type="submit">Objednat</button>
-<datalist id="materials-list">
-  {% for material in materials %}
-  <option value="{{ material }}">
-  {% endfor %}
-</datalist>
+<form class="order-form" method="post">
+    {{ csrf_input }}
+    {% if multiple_warehouses %}
+    <div>
+        {{ form.warehouse.label }}
+        <label>
+            {{ form.warehouse }}
+        </label>
+    </div>
+    {% endif %}
+    <div>
+        <label>
+            {{ form.time.label }}
+        </label>
+        {{ form.time }}
+    </div>
+    <div>
+        <label>
+            {{ form.amount.label }}
+        </label>
+        {{ form.amount }}
+    </div>
+    <div>
+        <label>
+            {{ form.material.label }}
+        </label>
+        {{ form.material }}
+    </div>
+    <button type="submit">Objednat</button>
+    <datalist id="materials-list">
+        {% for material in materials %}
+        <option value="{{ material }}">
+        {% endfor %}
+    </datalist>
 </form>
