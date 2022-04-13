@@ -1,0 +1,13 @@
+<form>
+{{ csrf_input }}
+{{ form.amount.label }}
+{{ form.amount }}
+{{ form.material.label }}
+{{ form.material }}
+<button type="submit">Objednat</button>
+<datalist id="materials-list">
+  {% for material in materials %}
+  <option value="{{ material }}">
+  {% endfor %}
+</datalist>
+</form>

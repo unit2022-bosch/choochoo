@@ -5,6 +5,7 @@ from random import randrange
 from choochoo_app.models import Train
 from django.views.generic import TemplateView
 
+from . import models
 from .forms import OrderForm
 
 
@@ -50,6 +51,45 @@ class StationView(TemplateView):
         ]
         context["orders"] = orders
         context["form"] = OrderForm()
-        context["materials"] = ("ads", "sfgfdg", "5465B4dfg")
+        context["materials"] = [
+            material.material_id for material in models.Material.objects.all()
+        ]
+
+        return context
+
+    def post(self, request, **kwargs):
+        form = OrderForm()
+        amount = int(request.POST["amount"])
+        material = request.POST["material"]
+        models.Order.create_order(kwargs["station_id"], material, amount, 0).save()
+
+        return self.get(request, **kwargs)
+
+
+class LogisticView(TemplateView):
+    template_name = "logisticss/logistics.html"
+
+    def temp(self):
+        context = {}
+        orders = [
+            {
+                "order_time": datetime.now(),
+                "departure_time": datetime.now(),
+                "material": randrange(1_000_000_000, 10_000_000_000),
+                "amount": randrange(1, 100),
+            }
+            for _ in range(randrange(10, 30))
+        ]
+        context["orders"] = orders
+        context["form"] = OrderForm()
+
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super(LoadingView, self).get_context_data(**kwargs)
+
+        SKLADY = (1, 2, 4, 5)
+        for warehouse in SKLADY:
+            context[warehouse] = self.temp()
 
         return context

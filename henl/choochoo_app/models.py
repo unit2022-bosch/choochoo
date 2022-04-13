@@ -9,6 +9,12 @@ class Station(models.Model):
     # id is implicit
     is_warehouse = models.BooleanField()
 
+    def __str__(self):
+        if self.is_warehouse:
+            return f"Warehouse {self.id}"
+        else:
+            return f"Station {self.id}"
+
     class Meta:
         verbose_name = "Station"
         verbose_name_plural = "Stations"
@@ -28,9 +34,15 @@ class Train(models.Model):
         null=True,
     )
 
+    def __str__(self):
+        if self.is_in_warehouse:
+            return f"Vlak: {self.human_id}, čeká na naložení"
+        else:
+            return f"Vlak: {self.human_id}, naposledy ve stanici {self.last_station}"
+
     class Meta:
         verbose_name = "Train"
-        verbose_name_plural = "Trainqs"
+        verbose_name_plural = "Trains"
 
     def get_absolute_url(self):
         return reverse("Train_detail", kwargs={"pk": self.pk})
@@ -58,6 +70,9 @@ class Material(models.Model):
     # id is implicit
     material_id = models.CharField(max_length=30)
     human_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.material_id}: {self.human_name}"
 
     class Meta:
         verbose_name = "Material"
@@ -135,9 +150,16 @@ class Order(models.Model):
         "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
     )
     user = models.ForeignKey(
-        "choochoo_app.User", verbose_name=(""), on_delete=models.CASCADE
+        "choochoo_app.User",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
+        null=True,
+        default=None,
     )
     is_complete = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Objednávka {self.quantity} kusů ({self.material}) na stanici {self.station}"
 
     class Meta:
         verbose_name = "Order"
@@ -165,3 +187,13 @@ class Order(models.Model):
                     orders[o.material] += o.quantity
             output.append((r, train, orders))
         return output
+
+    @staticmethod
+    def create_order(station_id, material_id, quantity, time):
+        o = Order()
+        o.time = time
+        o.material = Material.objects.filter(material_id=material_id)[0]
+        o.quantity = quantity
+        o.station = Station.objects.get(pk=station_id)
+        o.user = None
+        return o
