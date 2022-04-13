@@ -30,7 +30,7 @@
 <section>
     <form>
         {{ csrf_input }}
-        {{ form.material }}
+        {{ form }}
         <button type="submit">Objednat</button>
         <datalist id="materials-list">
             {% for material in materials %}
