@@ -1,3 +1,10 @@
+<script>window.filterFields =
+{% if multiple_warehouses %}
+  [[0, "warehouse"], [1, "material"]]
+{% else %}
+  [[0, "material"]]
+{% endif %}
+;</script>
 <form id="order-form" method="POST" target=".">
   <input type="hidden" name="id" id="order-id" />
   <table class="orders">
@@ -9,6 +16,15 @@
       <th>Množství</th>
       <th>Čas objednávky</th>
       <th>Čas odeslání</th>
+      <th></th>
+    </tr>
+    <tr>
+      {% if multiple_warehouses %}
+      <th><input id="warehouse-filter" /></th>
+      {% endif %}
+      <th><input id="material-filter" /></th>
+      <th></th>
+      <th></th>
       <th></th>
     </tr>
     {% for order in orders %}
