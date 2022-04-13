@@ -50,5 +50,6 @@ class StationView(TemplateView):
         ]
         context["orders"] = orders
         context["form"] = OrderForm()
+        context["materials"] = ("ads", "sfgfdg", "5465B4dfg")
 
         return context
