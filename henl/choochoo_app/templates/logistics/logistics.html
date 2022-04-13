@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "main.html" %}
 
-</body>
-</html>
+{% block title %}Logistika{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ 'static/styles/loading/loading.css' }}" />
+<link rel="stylesheet" href="{{ '/static/styles/station/station.css' }}" />
+{% endblock %}
+
+{% block body %}
+<section>
+  {% include "station/orders.html" %}
+</section>
+{% endblock %}

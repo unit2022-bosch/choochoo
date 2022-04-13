@@ -55,9 +55,10 @@ class StationView(TemplateView):
         ]
         context["orders"] = orders
         context["form"] = OrderForm()
-        context["materials"] = [
-            material.material_id for material in models.Material.objects.all()
-        ]
+        context["multiple_warehouses"] = False
+        # context["materials"] = [
+        #     material.material_id for material in models.Material.objects.all()
+        # ]
 
         return context
 
@@ -71,11 +72,10 @@ class StationView(TemplateView):
 
 
 class LogisticView(TemplateView):
-    template_name = "logisticss/logistics.html"
+    template_name = "logistics/logistics.html"
 
-    def temp(self):
-        context = {}
-        orders = [
+    def orders_of_warehouse(self, warehouse):
+        return [
             {
                 "order_time": datetime.now(),
                 "departure_time": datetime.now(),
@@ -84,16 +84,20 @@ class LogisticView(TemplateView):
             }
             for _ in range(randrange(10, 30))
         ]
-        context["orders"] = orders
-        context["form"] = OrderForm()
-
-        return context
 
     def get_context_data(self, **kwargs):
-        context = super(LoadingView, self).get_context_data(**kwargs)
+        context = super(LogisticView, self).get_context_data(**kwargs)
 
         SKLADY = (1, 2, 4, 5)
+        orders = []
         for warehouse in SKLADY:
-            context[warehouse] = self.temp()
+            orders += [
+                {"warehouse": warehouse, **order}
+                for order in self.orders_of_warehouse(warehouse)
+            ]
+        orders.sort(key=lambda order: order["order_time"])
+
+        context["orders"] = orders
+        context["multiple_warehouses"] = True
 
         return context

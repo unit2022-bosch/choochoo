@@ -1,16 +1,22 @@
-  <table class="orders">
-    <tr>
-      <th>Materiál</th>
-      <th>Množství</th>
-      <th>Čas objednávky</th>
-      <th>Čas odeslání</th>
-    </tr>
-    {% for order in orders %}
-    <tr>
-      <td>{{order.material}}</td>
-      <td>{{order.amount}}</td>
-      <td><time>{{order.order_time.strftime("%H:%M")}}</time></td>
-      <td><time>{{order.departure_time.strftime("%H:%M")}}</time></td>
-    </tr>
-    {% endfor %}
-  </table>
+<table class="orders">
+  <tr>
+    {% if multiple_warehouses %}
+    <th>Sklad</th>
+    {% endif %}
+    <th>Materiál</th>
+    <th>Množství</th>
+    <th>Čas objednávky</th>
+    <th>Čas odeslání</th>
+  </tr>
+  {% for order in orders %}
+  <tr>
+    {% if multiple_warehouses %}
+    <td>{{order.warehouse}}</td>
+    {% endif %}
+    <td>{{order.material}}</td>
+    <td>{{order.amount}}</td>
+    <td><time>{{order.order_time.strftime("%H:%M")}}</time></td>
+    <td><time>{{order.departure_time.strftime("%H:%M")}}</time></td>
+  </tr>
+  {% endfor %}
+</table>
