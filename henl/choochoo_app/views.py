@@ -12,6 +12,8 @@ class LoadingView(TemplateView):
         }
         context["data"] = data
 
+        return context
+
 
 class StationView(TemplateView):
     template_name = "station/station.html"
@@ -19,3 +21,5 @@ class StationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
         context["bla"] = "to co chci"
+
+        return context
