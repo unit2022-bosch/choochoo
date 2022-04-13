@@ -44,6 +44,11 @@ class StationView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
+        context.update(self.create_context_data(kwargs["station_id"]))
+        print(context)
+        return context
+
+    def create_context_data(self, station_id, context={}):
         orders = [
             {
                 "order_time": datetime.now(),
@@ -55,27 +60,26 @@ class StationView(TemplateView):
         ]
         context["orders"] = orders
         context["form"] = OrderForm()
-        context["materials"] = [
-            material.material_id for material in models.Material.objects.all()
-        ]
+        context["multiple_warehouses"] = False
+        # context["materials"] = [
+        #     material.material_id for material in models.Material.objects.all()
+        # ]
 
         return context
 
     def post(self, request, **kwargs):
-        form = OrderForm()
-        amount = int(request.POST["amount"])
-        material = request.POST["material"]
-        models.Order.create_order(kwargs["station_id"], material, amount, 0).save()
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            models.Order.create_order(kwargs["station_id"], form.material, form.amount, 0).save()
 
         return self.get(request, **kwargs)
 
 
 class LogisticView(TemplateView):
-    template_name = "logisticss/logistics.html"
+    template_name = "logistics/logistics.html"
 
-    def temp(self):
-        context = {}
-        orders = [
+    def orders_of_warehouse(self, warehouse):
+        return [
             {
                 "order_time": datetime.now(),
                 "departure_time": datetime.now(),
@@ -84,16 +88,20 @@ class LogisticView(TemplateView):
             }
             for _ in range(randrange(10, 30))
         ]
-        context["orders"] = orders
-        context["form"] = OrderForm()
-
-        return context
 
     def get_context_data(self, **kwargs):
-        context = super(LoadingView, self).get_context_data(**kwargs)
+        context = super(LogisticView, self).get_context_data(**kwargs)
 
         SKLADY = (1, 2, 4, 5)
+        orders = []
         for warehouse in SKLADY:
-            context[warehouse] = self.temp()
+            orders += [
+                {"warehouse": warehouse, **order}
+                for order in self.orders_of_warehouse(warehouse)
+            ]
+        orders.sort(key=lambda order: order["order_time"])
+
+        context["orders"] = orders
+        context["multiple_warehouses"] = True
 
         return context
