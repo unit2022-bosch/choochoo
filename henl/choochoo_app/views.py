@@ -100,18 +100,4 @@ class LogisticView(TemplateView):
         context["orders"] = orders
         context["multiple_warehouses"] = True
 
-        trains = {
-            choice(
-                "Honza Pepa Ivan Vašek Roman Tomáš Radek Hynek Vojta Vítek Kamil".split()
-            ): {
-                "time": datetime.now(),
-                "materials": [
-                    (randrange(1_000_000_000, 10_000_000_000), randrange(1, 100))
-                    for _ in range(randrange(1, 20))
-                ],
-            }
-            for i in range(10)
-        }
-        context["trains"] = trains
-
         return context
