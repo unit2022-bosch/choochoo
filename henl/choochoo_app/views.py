@@ -116,7 +116,6 @@ class LogisticView(TemplateView):
 
     def post(self, request, **kwargs):
         form = OrderForm(request.POST)
-
         models.Order.create_order(
             request.POST["warehouse"],
             request.POST["material"],
