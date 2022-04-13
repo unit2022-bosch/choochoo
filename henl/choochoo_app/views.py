@@ -41,6 +41,7 @@ class StationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
         context.update(self.create_context_data(kwargs["station_id"]))
+        print(context)
         return context
 
     def create_context_data(self, station_id, context={}):
@@ -62,10 +63,9 @@ class StationView(TemplateView):
         return context
 
     def post(self, request, **kwargs):
-        form = OrderForm()
-        amount = int(request.POST["amount"])
-        material = request.POST["material"]
-        models.Order.create_order(kwargs["station_id"], material, amount, 0).save()
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            models.Order.create_order(kwargs["station_id"], form.material, form.amount, 0).save()
 
         return self.get(request, **kwargs)
 
@@ -90,7 +90,7 @@ class LogisticView(TemplateView):
         return context
 
     def get_context_data(self, **kwargs):
-        context = super(LoadingView, self).get_context_data(**kwargs)
+        context = super(LogisticView, self).get_context_data(**kwargs)
 
         SKLADY = (1, 2, 4, 5)
         for warehouse in SKLADY:
