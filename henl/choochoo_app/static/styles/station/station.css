@@ -8,3 +8,20 @@ nav {
   overflow-x: auto;
   padding: 0.5rem;
 }
+
+section {
+  margin: 1rem;
+}
+
+.orders > tbody > tr:nth-of-type(2n + 2) {
+  background-color: #ddd;
+}
+
+.orders > tbody > tr:nth-of-type(2n + 3) {
+  background-color: #bbb;
+}
+
+th,
+td {
+  padding: 0.4rem;
+}
