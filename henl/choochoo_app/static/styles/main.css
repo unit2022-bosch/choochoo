@@ -1,5 +1,6 @@
 :root {
   --main-bg: #ccc;
+  --main-fg: #000;
   --card-bg: #335;
   --card-bg-odd: #335;
   --card-bg-even: #223;
@@ -8,6 +9,7 @@
 
 body {
   background-color: var(--main-bg);
+  color: var(--main-fg);
   font-family: sans-serif;
   font-weight: 500;
   margin: 0;
