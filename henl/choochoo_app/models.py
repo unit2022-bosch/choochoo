@@ -27,7 +27,10 @@ class Train(models.Model):
     is_in_warehouse = models.BooleanField()
     human_id = models.CharField(max_length=255)
     last_station = models.ForeignKey(
-        "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
+        "choochoo_app.Station",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
+        null=True,
     )
 
     def __str__(self):
@@ -72,7 +75,7 @@ class Train(models.Model):
 
 class Material(models.Model):
     # id is implicit
-    material_id = models.CharField(max_length=30, primary_key=True)
+    material_id = models.CharField(max_length=30)
     human_name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -95,13 +98,32 @@ class User(models.Model):
         return reverse("User_detail", kwargs={"pk": self.pk})
 
 
+class PathSegment(models.Model):
+    # id is implicit
+    route = models.ForeignKey(
+        "choochoo_app.Route", verbose_name=(""), on_delete=models.CASCADE
+    )
+    src = models.ForeignKey(
+        "choochoo_app.Station",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
+        related_name="src",
+    )
+    dst = models.ForeignKey(
+        "choochoo_app.Station",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
+        related_name="dst",
+    )
+    travel_time = models.PositiveSmallIntegerField()
+
+
 class Route(models.Model):
     # id is implicit
     time = models.TimeField()
     train = models.ForeignKey(
         "choochoo_app.Train", verbose_name=(""), on_delete=models.CASCADE
     )
-    stations = models.ManyToManyField(Station)
 
     class Meta:
         verbose_name = "Route"

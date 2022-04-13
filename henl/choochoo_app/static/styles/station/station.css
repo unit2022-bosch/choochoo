@@ -1,0 +1,10 @@
+nav {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  background-color: var(--card-bg);
+  color: var(--card-fg);
+  display: flex;
+  flex-flow: row nowrap;
+  overflow-x: auto;
+  padding: 0.5rem;
+}
