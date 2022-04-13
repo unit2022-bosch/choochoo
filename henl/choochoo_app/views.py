@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 from random import choice
 from random import randrange
 
@@ -26,12 +26,16 @@ class LoadingView(TemplateView):
             }
             for i in range(10)
         }
-        context["trains"] = trains
+
         trains_to_load = Train.trains_to_be_loaded()
         trains = {}
-        for train in trains_to_load:
-            trains[train.human_id] = train.get_orders()
-
+        loading_data = models.Order.get_all_to_load(time(0, 0, 0))
+        for route, train, materials in loading_data:
+            trains[train.human_id] = {
+                "time": route.time,
+                "materials": materials.items(),
+            }
+        context["trains"] = trains
         return context
 
 

@@ -178,12 +178,14 @@ class Order(models.Model):
             train: Train = r.train
             if not train.is_in_warehouse:
                 continue
-            orders = defaultdict(default_factory=0)
+            orders = {}
             for s in r.get_stations():
                 for o in Order.objects.all().filter(station=s):
                     if o in assigned_orders or o.is_complete:
                         continue
                     assigned_orders.add(o)
+                    if o.material not in orders:
+                        orders[o.material] = 0
                     orders[o.material] += o.quantity
             output.append((r, train, orders))
         return output
