@@ -108,7 +108,20 @@ class LogisticView(TemplateView):
             ]
         orders.sort(key=lambda order: order["order_time"])
 
+        context["form"] = OrderForm()
         context["orders"] = orders
         context["multiple_warehouses"] = True
 
         return context
+
+    def post(self, request, **kwargs):
+        form = OrderForm(request.POST)
+
+        models.Order.create_order(
+            request.POST["warehouse"],
+            request.POST["material"],
+            request.POST["amount"],
+            datetime.now(),
+        ).save()
+
+        return self.get(request, **kwargs)
