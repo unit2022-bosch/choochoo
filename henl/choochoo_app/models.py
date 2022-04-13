@@ -1,5 +1,6 @@
 from __future__ import annotations
 from collections import defaultdict
+from datetime import datetime
 from typing import List, Set
 from django.db import models
 from django.urls import reverse
@@ -81,6 +82,10 @@ class Material(models.Model):
     def get_absolute_url(self):
         return reverse("Material_detail", kwargs={"pk": self.pk})
 
+    @staticmethod
+    def create(material_id: str, human_name):
+        return Material(material_id=material_id, human_name=human_name)
+
 
 class User(models.Model):
     class Meta:
@@ -91,10 +96,21 @@ class User(models.Model):
         return reverse("User_detail", kwargs={"pk": self.pk})
 
 
+class RouteID(models.Model):
+    class Meta:
+        verbose_name = "RouteID"
+        verbose_name_plural = "RouteIDs"
+
+    def get_absolute_url(self):
+        return reverse("RouteID_detail", kwargs={"pk": self.pk})
+
+
 class PathSegment(models.Model):
     # id is implicit
-    route = models.ForeignKey(
-        "choochoo_app.Route", verbose_name=(""), on_delete=models.CASCADE
+    route_id = models.ForeignKey(
+        "choochoo_app.RouteID",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
     )
     src = models.ForeignKey(
         "choochoo_app.Station",
@@ -120,9 +136,14 @@ class PathSegment(models.Model):
 
 class Route(models.Model):
     # id is implicit
-    time = models.TimeField()
+    time = models.DateTimeField()
     train = models.ForeignKey(
         "choochoo_app.Train", verbose_name=(""), on_delete=models.CASCADE
+    )
+    route_id = models.ForeignKey(
+        "choochoo_app.RouteID",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
     )
 
     class Meta:
@@ -141,7 +162,8 @@ class Route(models.Model):
 
 class Order(models.Model):
     # id is implicit
-    time = models.PositiveBigIntegerField()
+    time_added = models.DateTimeField()
+    time_of_departure = models.DateTimeField()
     quantity = models.PositiveIntegerField()
     material = models.ForeignKey(
         "choochoo_app.Material", verbose_name=(""), on_delete=models.CASCADE
@@ -159,7 +181,9 @@ class Order(models.Model):
     is_complete = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Objednávka {self.quantity} kusů ({self.material}) na stanici {self.station}"
+        return (
+            f"Objednávka {self.quantity} kusů ({self.material}) na stanici {self.station}"
+        )
 
     class Meta:
         verbose_name = "Order"
@@ -171,10 +195,12 @@ class Order(models.Model):
     @staticmethod
     def get_all_to_load(time: int):
         assigned_orders = set()
+        assigned_routes = set()
         output = []
         for r in Route.objects.all():
             if not r.time >= time:
                 continue
+            # TODO filter other timeframe
             train: Train = r.train
             if not train.is_in_warehouse:
                 continue
@@ -191,11 +217,18 @@ class Order(models.Model):
         return output
 
     @staticmethod
-    def create_order(station_id, material_id, quantity, time):
+    def create_order(station_id, material_id, quantity, time_departure=None):
         o = Order()
-        o.time = time
+        o.time_added = datetime.now()
+        if o.time_of_departure is None:
+            o.time_of_departure = o.time_added
+        o.time_of_departure = time_departure
         o.material = Material.objects.filter(material_id=material_id)[0]
         o.quantity = quantity
         o.station = Station.objects.get(pk=station_id)
         o.user = None
         return o
+
+    @staticmethod
+    def get_orders_for_station(station_id):
+        return Order.objects.all().filter(station_id=station_id)

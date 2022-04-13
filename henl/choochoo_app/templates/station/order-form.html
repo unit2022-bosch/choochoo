@@ -1,5 +1,24 @@
+{% block head %}
+<head>
+    <link rel="stylesheet" href="{{ '/static/lib/dtsel/dtsel.css' }}" />
+    <script src="{{ '/static/lib/dtsel/dtsel.js' }}"></script>
+    <script type="module">
+        let instance = new dtsel.DTS("input[id='id_time']", {
+            showTime: true,
+            lang: "cs"
+        });
+    </script>
+</head>
+{% endblock %}
+
 <form method="post">
 {{ csrf_input }}
+{% if multiple_warehouses %}
+    {{ form.warehouse.label }}
+    {{ form.warehouse }}
+{% endif %}
+{{ form.time.label }}
+{{ form.time }}
 {{ form.amount.label }}
 {{ form.amount }}
 {{ form.material.label }}
