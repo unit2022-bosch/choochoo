@@ -59,4 +59,8 @@ class StationView(TemplateView):
 
     def post(self, request, **kwargs):
         form = OrderForm()
-        models.Order
+        amount = int(request.POST["amount"])
+        material = request.POST["material"]
+        models.Order.create_order(kwargs["station_id"], material, amount, 0).save()
+
+        return self.get(request, **kwargs)

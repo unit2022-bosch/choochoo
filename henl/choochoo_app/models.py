@@ -151,6 +151,9 @@ class Order(models.Model):
         default=None,
     )
 
+    def __str__(self):
+        return f"Objednávka {self.quantity} kusů ({self.material}) na stanici {self.station}"
+
     class Meta:
         verbose_name = "Order"
         verbose_name_plural = "Orders"
@@ -170,7 +173,7 @@ class Order(models.Model):
         return output
 
     @staticmethod
-    def create_order(self, station_id, material_id, quantity, time):
+    def create_order(station_id, material_id, quantity, time):
         o = Order()
         o.time = time
         o.material = Material.objects.filter(material_id=material_id)[0]
