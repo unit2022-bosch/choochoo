@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "main.html" %}
 
-</body>
-</html>
+{% block title %}Logistika{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ '/static/styles/station/station.css' }}" />
+{# <script src="{{ '/static/scripts/logistics/group.js' }}" #}
+{# <script src="{{ '/static/scripts/logistics/filter.js' }}" #}
+{% endblock %}
+
+{% block body %}
+<label for="group-by">Setřídit podle:</label>
+<select id="group-by">
+  <option selected value="none">Ničeho</option>
+  <option value="warehouse">Skladu</option>
+</select>
+<section>
+  {% include "station/orders.html" %}
+</section>
+{% endblock %}
