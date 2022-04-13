@@ -39,6 +39,16 @@ class StationView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
+        orders = [
+            {
+                "order_time": datetime.now(),
+                "departure_time": datetime.now(),
+                "material": randrange(1_000_000_000, 10_000_000_000),
+                "amount": randrange(1, 100),
+            }
+            for _ in range(randrange(10, 30))
+        ]
+        context["orders"] = orders
         context["form"] = OrderForm()
 
         return context

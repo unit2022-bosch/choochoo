@@ -12,27 +12,29 @@
 
 {% block body %}
 <section>
-  <table class="orders">
-    <tr>
-      <th>Čas objednávky</th>
-      <th>Materiál</th>
-      <th>Množství</th>
-      <th>Předpokládaný čas doručení</th>
-    </tr>
-    <tr>
-      <td><time>12:15</time></td>
-      <td>Kámen</td>
-      <td>2</td>
-      <td><time>12:24</time></td>
-    </tr>
-  </table>
+  <form>
+    {{ csrf_input }}
+    {{ form }}
+    <button type="submit">Objednat</button>
+  </form>
+  {# Scheduled trains #}
 </section>
 <section>
-    <form>
-        {{ csrf_input }}
-        {{ form }}
-        <button type="submit">Objednat</button>
-    </form>
-    {# Scheduled trains #}
+  <table class="orders">
+    <tr>
+      <th>Materiál</th>
+      <th>Množství</th>
+      <th>Čas objednávky</th>
+      <th>Čas odeslání</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+      <td>{{order.material}}</td>
+      <td>{{order.amount}}</td>
+      <td><time>{{order.order_time.strftime("%H:%M")}}</time></td>
+      <td><time>{{order.departure_time.strftime("%H:%M")}}</time></td>
+    </tr>
+    {% endfor %}
+  </table>
 </section>
 {% endblock %}
