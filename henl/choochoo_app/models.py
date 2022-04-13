@@ -63,7 +63,7 @@ class Train(models.Model):
 
 class Material(models.Model):
     # id is implicit
-    material_id = models.CharField(max_length=30, primary_key=True)
+    material_id = models.CharField(max_length=30)
     human_name = models.CharField(max_length=255)
 
     class Meta:
@@ -83,16 +83,22 @@ class User(models.Model):
         return reverse("User_detail", kwargs={"pk": self.pk})
 
 
-class Path(models.Model):
+class PathSegment(models.Model):
     # id is implicit
     route = models.ForeignKey(
         "choochoo_app.Route", verbose_name=(""), on_delete=models.CASCADE
     )
-    source = models.ForeignKey(
-        "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
+    src = models.ForeignKey(
+        "choochoo_app.Station",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
+        related_name="src",
     )
-    destination = models.ForeignKey(
-        "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
+    dst = models.ForeignKey(
+        "choochoo_app.Station",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
+        related_name="dst",
     )
     travel_time = models.PositiveSmallIntegerField()
 
