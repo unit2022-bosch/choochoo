@@ -10,22 +10,23 @@
 <ol class="trains">
   {% for id, train in data.items() %}
   <li>
+    <div class="train-name">{{train.name}}</div>
     <div class="departure-time">
       <label>Čas odjezdu</label>
       <time>{{train.time.strftime("%H:%M")}}</time>
     </div>
-    <table class="materials">
-      <tr>
-        <th class="material-name">Materiál</td>
-        <th class="amount">Množství</td>
-      </tr>
+    <ul class="materials">
+      <li>
+        <label>Materiál</label>
+        <label>Množství</label>
+      </li>
       {% for name, amount in train.materials %}
-      <tr>
-        <td class="material-name">{{name}}</td>
-        <td class="amount">{{amount}}</td>
-      </tr>
+      <li>
+        <div class="material-name">{{name}}</td>
+        <div class="amount">{{amount}}</td>
+      </li>
       {% endfor %}
-    </table>
+    </ul>
   </li>
   {% endfor %}
 </ol>
