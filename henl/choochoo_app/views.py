@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView
+from datetime import datetime
 
 
 class LoadingView(TemplateView):
@@ -6,7 +7,10 @@ class LoadingView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(LoadingView, self).get_context_data(**kwargs)  # mostly useless
-        context["bla"] = "to co chci"
+        data = {
+            "id": {"time": datetime.now(), "materials": ["asdsf", "465435d", "4354as"]} for _ in range(10)
+        }
+        context["data"] = data
 
 
 class StationView(TemplateView):
