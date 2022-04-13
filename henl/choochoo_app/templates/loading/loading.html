@@ -1,6 +1,10 @@
-<meta charset="utf-8" />
-<link rel="stylesheet" href="/styles/main.css" />
-<link rel="stylesheet" href="/styles/loading/loading.css" />
+{% extends "main.html" %}
+{% block title %}Hlavní sklad{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ 'static/styles/loading/loading.css' }}" />
+{% endblock %}
+
+{% block body %}
 <ol class="trains">
   <li class="train">
     <time>12:20</time>
@@ -53,3 +57,4 @@
     </div>
   </li>
 </ol>
+{% endblock %}
