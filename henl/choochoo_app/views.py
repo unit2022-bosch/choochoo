@@ -51,9 +51,9 @@ class StationView(TemplateView):
         ]
         context["orders"] = orders
         context["form"] = OrderForm()
-        context["materials"] = [
-            material.material_id for material in models.Material.objects.all()
-        ]
+        # context["materials"] = [
+        #     material.material_id for material in models.Material.objects.all()
+        # ]
 
         return context
 
