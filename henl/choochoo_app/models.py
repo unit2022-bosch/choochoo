@@ -6,6 +6,8 @@ from django.urls import reverse
 
 class Station(models.Model):
     # id is implicit
+    is_warehouse = models.BooleanField()
+
     class Meta:
         verbose_name = "Station"
         verbose_name_plural = "Stations"
@@ -16,6 +18,7 @@ class Station(models.Model):
 
 class Train(models.Model):
     # id is implicit
+    is_in_warehouse = models.BooleanField()
     human_id = models.CharField(max_length=255)
     last_station = models.ForeignKey(
         "choochoo_app.Station",
@@ -26,7 +29,7 @@ class Train(models.Model):
 
     class Meta:
         verbose_name = "Train"
-        verbose_name_plural = "Trains"
+        verbose_name_plural = "Trainqs"
 
     def get_absolute_url(self):
         return reverse("Train_detail", kwargs={"pk": self.pk})
@@ -45,6 +48,17 @@ class Train(models.Model):
             for s in r.stations:
                 stations.add(s)
         return stations
+
+    @staticmethod
+    def trains_to_be_loaded() -> list[Train]:
+        return Train.objects.all().filter(is_in_warehouse=True)
+
+    def get_orders(self) -> Set[Order]:
+        relevant_stations = self.get_stations()
+        orders = set()
+        for s in relevant_stations:
+            orders.add(Order.objects.all().filter(station=s))
+        return orders
 
 
 class Material(models.Model):
@@ -120,18 +134,10 @@ class Order(models.Model):
         return reverse("Order_detail", kwargs={"pk": self.pk})
 
     @staticmethod
-    def get_orders(train: Train) -> Set[Order]:
-        relevant_stations = train.get_stations()
-        orders = set()
-        for s in relevant_stations:
-            orders.add(Order.objects.all().filter(station=s))
-        return orders
-
-    @staticmethod
     def get_materials(train: Train, time: int):
         times = train.get_times()
         next_times = sorted(filter(lambda x: x > time, times))
-        orders = set(Order.get_orders(train))
+        orders = set(train.get_orders())
         output = []
         for o in orders:  # TODO check for index out of bounds
             if o.time > next_times[0] and o.time < next_times[1]:

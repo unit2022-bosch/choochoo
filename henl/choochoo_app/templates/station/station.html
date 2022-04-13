@@ -11,20 +11,9 @@
 {% endblock %}
 
 {% block body %}
-<section>
-  <table class="orders">
-    <tr>
-      <th>Čas objednávky</th>
-      <th>Materiál</th>
-      <th>Množství</th>
-      <th>Předpokládaný čas doručení</th>
-    </tr>
-    <tr>
-      <td><time>12:15</time></td>
-      <td>Kámen</td>
-      <td>2</td>
-      <td><time>12:24</time></td>
-    </tr>
-  </table>
-</section>
+    <form>
+        {{ csrf_input }}
+        {{ form }}
+    </form>
+    {# Scheduled trains #}
 {% endblock %}
