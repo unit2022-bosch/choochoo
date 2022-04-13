@@ -18,6 +18,10 @@ nav {
   overflow: no-scroll;
 }
 
+nav > * {
+  margin: 0 0.4rem;
+}
+
 section {
   margin: 1rem;
 }
