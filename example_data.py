@@ -4,6 +4,7 @@ import json
 from datetime import datetime, time, timedelta
 from typing import List, Tuple
 import pandas as pd
+import pytz
 
 
 def add_train(pk: int, human_id: str, in_warehouse: bool, last_station_pk: int):
@@ -167,23 +168,25 @@ def make_example_network():
     for i in range(100):
         out.append(
             add_route(
-                0,
+                i,
                 0,
                 0,
                 datetime(2021, 4, 13, 17, 0, 0) + timedelta(minutes=15),
             )
         )
+    for i in range(100):
         out.append(
             add_route(
-                1,
+                100 + i,
                 1,
                 1,
                 datetime(2021, 4, 13, 17, 15, 0) + timedelta(minutes=15),
             )
         )
+    for i in range(100):
         out.append(
             add_route(
-                2,
+                200 + i,
                 2,
                 2,
                 datetime(2021, 4, 13, 17, 30, 0) + timedelta(minutes=15),
@@ -196,7 +199,7 @@ def make_example_network():
         rand_time += timedelta(seconds=rand_secs)
         rand_station = randint(1, 10)
         rand_quant = randint(1, 1000)
-        rand_material = randint(0, df.shape[0])
+        rand_material = randint(0, df.shape[0] - 1)
         o = add_order(
             i, rand_time, rand_time, rand_quant, rand_material, rand_station, None
         )
