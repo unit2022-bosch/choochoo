@@ -13,12 +13,36 @@ section {
   margin: 1rem;
 }
 
+.order-form {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.3rem;
+}
+
+.order-form > div {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.order-form input {
+  width: 8rem;
+}
+
+.orders {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .orders > tbody > tr:nth-of-type(2n + 3) {
   background-color: #ddd;
 }
 
 .orders > tbody > tr:nth-of-type(2n + 4) {
   background-color: #bbb;
+}
+
+th > input {
+  width: 4rem;
 }
 
 th,
