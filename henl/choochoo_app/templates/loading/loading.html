@@ -19,10 +19,10 @@
         <th class="material-name">Materiál</td>
         <th class="amount">Množství</td>
       </tr>
-      {% for name, amount in train.materials %}
+      {% for order in train.get_orders() %}
       <tr>
-        <td class="material-name">{{name}}</td>
-        <td class="amount">{{amount}}</td>
+        <td class="material-name">{{order.material.material_id}}</td>
+        <td class="amount">{{order.quantity}}</td>
       </tr>
       {% endfor %}
     </table>

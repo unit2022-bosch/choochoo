@@ -8,6 +8,12 @@ class Station(models.Model):
     # id is implicit
     is_warehouse = models.BooleanField()
 
+    def __str__(self):
+        if self.is_warehouse:
+            return f"Warehouse {self.id}"
+        else:
+            return f"Station {self.id}"
+
     class Meta:
         verbose_name = "Station"
         verbose_name_plural = "Stations"
@@ -23,6 +29,12 @@ class Train(models.Model):
     last_station = models.ForeignKey(
         "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        if self.is_in_warehouse:
+            return f"Vlak: {self.human_id}, čeká na naložení"
+        else:
+            return f"Vlak: {self.human_id}, naposledy ve stanici {self.last_station}"
 
     class Meta:
         verbose_name = "Train"
@@ -62,6 +74,9 @@ class Material(models.Model):
     # id is implicit
     material_id = models.CharField(max_length=30, primary_key=True)
     human_name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.material_id}: {self.human_name}"
 
     class Meta:
         verbose_name = "Material"
@@ -107,7 +122,11 @@ class Order(models.Model):
         "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
     )
     user = models.ForeignKey(
-        "choochoo_app.User", verbose_name=(""), on_delete=models.CASCADE
+        "choochoo_app.User",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
+        null=True,
+        default=None,
     )
 
     class Meta:
@@ -127,3 +146,13 @@ class Order(models.Model):
             if o.time > next_times[0] and o.time < next_times[1]:
                 output.append((o.material, o.quantity))
         return output
+
+    @staticmethod
+    def create_order(self, station_id, material_id, quantity, time):
+        o = Order()
+        o.time = time
+        o.material = Material.objects.filter(material_id=material_id)[0]
+        o.quantity = quantity
+        o.station = Station.objects.get(pk=station_id)
+        o.user = None
+        return o

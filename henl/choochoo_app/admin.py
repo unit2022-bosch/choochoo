@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from choochoo_app.models import Material, Train, Station
+from choochoo_app.models import Material, Train, Station, Order
+
 
 # Register your models here.
 @admin.register(Material)
@@ -15,4 +16,9 @@ class TrainAdmin(admin.ModelAdmin):
 
 @admin.register(Station)
 class StationAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
     pass

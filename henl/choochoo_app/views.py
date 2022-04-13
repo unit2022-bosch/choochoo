@@ -22,7 +22,7 @@ class LoadingView(TemplateView):
         trains_to_load = Train.trains_to_be_loaded()
         data = {}
         for train in trains_to_load:
-            data[train.human_id] = train.get_orders()
+            data[train.human_id] = train
 
         return context
 
