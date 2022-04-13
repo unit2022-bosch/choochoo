@@ -1,16 +1,38 @@
 nav {
   width: 100%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   background-color: var(--card-bg);
   color: var(--card-fg);
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex-flow: row nowrap;
   overflow-x: auto;
-  padding: 0.5rem;
+  padding: 0.75rem;
 }
 
 section {
   margin: 1rem;
+}
+
+.order-form {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.3rem;
+}
+
+.order-form > div {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.order-form input {
+  width: 8rem;
+}
+
+.orders {
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .orders > tbody > tr:nth-of-type(2n + 3) {
@@ -19,6 +41,10 @@ section {
 
 .orders > tbody > tr:nth-of-type(2n + 4) {
   background-color: #bbb;
+}
+
+th > input {
+  width: 4rem;
 }
 
 th,
