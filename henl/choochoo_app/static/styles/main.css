@@ -35,6 +35,10 @@ td {
   padding: 0 0.3rem;
 }
 
+input {
+  padding: 0.25rem;
+}
+
 .buttons-stack {
   display: flex;
   flex-flow: column nowrap;
