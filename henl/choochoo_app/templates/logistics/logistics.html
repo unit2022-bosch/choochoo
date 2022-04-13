@@ -1,11 +1,25 @@
 {% extends "main.html" %}
-
 {% block title %}Logistika{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{{ '/static/styles/station/station.css' }}" />
 {# <script type="module" src="{{ '/static/scripts/logistics/group.js' }}"></script> #}
 <script type="module" src="{{ '/static/scripts/logistics/filter.js' }}"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script type="module">
+    let chart0 = new Chart("chart-0", {
+      type: "bar",
+      data: {
+          labels: {{ chart0_x }},
+          datasets: [{
+              data: {{ chart0_y }}
+          }]
+      },
+      options: {}
+    });
+</script>
 {% endblock %}
 
 {% block body %}
@@ -19,5 +33,9 @@
 <section>
   {% include "station/order-form.html" %}
   {% include "station/orders.html" %}
+  <div>
+      <h3>Počet objednávek na mezisklad</h3>
+      <canvas id="chart-0"></canvas>
+  </div>
 </section>
 {% endblock %}
