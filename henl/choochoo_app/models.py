@@ -1,4 +1,5 @@
 from __future__ import annotations
+from collections import defaultdict
 from typing import List, Set
 from django.db import models
 from django.urls import reverse
@@ -52,14 +53,6 @@ class Train(models.Model):
     def get_times(self) -> List[int]:
         routes = self.get_routes()
         return sorted([x.time for x in routes])
-
-    def get_stations(self) -> Set[Station]:
-        routes = self.get_routes()
-        stations = set()
-        for r in routes:
-            for s in r.stations:
-                stations.add(s)
-        return stations
 
     @staticmethod
     def trains_to_be_loaded() -> list[Train]:
@@ -117,6 +110,13 @@ class PathSegment(models.Model):
     )
     travel_time = models.PositiveSmallIntegerField()
 
+    class Meta:
+        verbose_name = "Path"
+        verbose_name_plural = "Paths"
+
+    def get_absolute_url(self):
+        return reverse("Path_detail", kwargs={"pk": self.pk})
+
 
 class Route(models.Model):
     # id is implicit
@@ -131,6 +131,12 @@ class Route(models.Model):
 
     def get_absolute_url(self):
         return reverse("Route_detail", kwargs={"pk": self.pk})
+
+    def get_stations(self) -> Set[Station]:
+        stations = set()
+        for p in self.pathsegment_set.all():
+            stations.add(p.src)
+        return stations
 
 
 class Order(models.Model):
@@ -150,6 +156,7 @@ class Order(models.Model):
         null=True,
         default=None,
     )
+    is_complete = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Objednávka {self.quantity} kusů ({self.material}) na stanici {self.station}"
@@ -162,14 +169,23 @@ class Order(models.Model):
         return reverse("Order_detail", kwargs={"pk": self.pk})
 
     @staticmethod
-    def get_materials(train: Train, time: int):
-        times = train.get_times()
-        next_times = sorted(filter(lambda x: x > time, times))
-        orders = set(train.get_orders())
+    def get_all_to_load(time: int):
+        assigned_orders = set()
         output = []
-        for o in orders:  # TODO check for index out of bounds
-            if o.time > next_times[0] and o.time < next_times[1]:
-                output.append((o.material, o.quantity))
+        for r in Route.objects.all():
+            if not r.time >= time:
+                continue
+            train: Train = r.train
+            if not train.is_in_warehouse:
+                continue
+            orders = defaultdict(default_factory=0)
+            for s in r.get_stations():
+                for o in Order.objects.all().filter(station=s):
+                    if o in assigned_orders or o.is_complete:
+                        continue
+                    assigned_orders.add(o)
+                    orders[o.material] += o.quantity
+            output.append((r, train, orders))
         return output
 
     @staticmethod
