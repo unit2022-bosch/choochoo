@@ -5,6 +5,7 @@ from random import randrange
 from choochoo_app.models import Train
 from django.views.generic import TemplateView
 
+from . import models
 from .forms import OrderForm
 
 
@@ -40,6 +41,12 @@ class StationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
         context["form"] = OrderForm()
-        context["materials"] = ("ads", "sfgfdg", "5465B4dfg")
+        context["materials"] = [
+            material.material_id for material in models.Material.objects.all()
+        ]
 
         return context
+
+    def post(self, request, **kwargs):
+        form = OrderForm()
+        models.Order

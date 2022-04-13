@@ -41,7 +41,7 @@ class Train(models.Model):
 
     class Meta:
         verbose_name = "Train"
-        verbose_name_plural = "Trainqs"
+        verbose_name_plural = "Trains"
 
     def get_absolute_url(self):
         return reverse("Train_detail", kwargs={"pk": self.pk})
