@@ -27,6 +27,7 @@ table {
   font-weight: inherit;
 }
 
+th,
 td {
   padding: 0 0.3rem;
 }

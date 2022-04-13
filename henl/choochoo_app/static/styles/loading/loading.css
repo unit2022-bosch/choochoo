@@ -2,6 +2,21 @@ button {
   font-size: 1.5rem;
 }
 
+.departure-time {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+.departure-time > label {
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.departure-time > time {
+  font-size: 3rem;
+}
+
 .ready-button {
   background-color: #070;
 }
@@ -29,8 +44,4 @@ button {
 
 .trains > li:nth-of-type(even) {
   background-color: var(--card-bg-even);
-}
-
-.trains > li > time {
-  font-size: 3rem;
 }
