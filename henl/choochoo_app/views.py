@@ -1,4 +1,5 @@
 from datetime import datetime
+from .forms import OrderForm
 
 from django.views.generic import TemplateView
 
@@ -31,5 +32,6 @@ class StationView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
+        context["form"] = OrderForm()
 
         return context
