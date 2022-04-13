@@ -17,9 +17,9 @@ class Station(models.Model):
 class Train(models.Model):
     # id is implicit
     human_id = models.CharField(max_length=255)
-    # stations = models.ForeignKey(
-    #     "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
-    # )
+    last_station = models.ForeignKey(
+        "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
+    )
 
     class Meta:
         verbose_name = "Train"
@@ -48,9 +48,6 @@ class Material(models.Model):
     # id is implicit
     material_id = models.CharField(max_length=30, primary_key=True)
     human_name = models.CharField(max_length=255)
-    order = models.ForeignKey(
-        "choochoo_app.Order", verbose_name=(""), on_delete=models.CASCADE
-    )
 
     class Meta:
         verbose_name = "Material"
@@ -71,7 +68,7 @@ class User(models.Model):
 
 class Route(models.Model):
     # id is implicit
-    time = models.PositiveBigIntegerField()
+    time = models.TimeField()
     train = models.ForeignKey(
         "choochoo_app.Train", verbose_name=(""), on_delete=models.CASCADE
     )
@@ -89,6 +86,9 @@ class Order(models.Model):
     # id is implicit
     time = models.PositiveBigIntegerField()
     quantity = models.PositiveIntegerField()
+    material = models.ForeignKey(
+        "choochoo_app.Material", verbose_name=(""), on_delete=models.CASCADE
+    )
     station = models.ForeignKey(
         "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
     )
@@ -119,7 +119,5 @@ class Order(models.Model):
         output = []
         for o in orders:  # TODO check for index out of bounds
             if o.time > next_times[0] and o.time < next_times[1]:
-                materials = Order.material_set.all().filter(order=o)
-                quantity = o.quantity
-                output.append((materials, quantity))
+                output.append((o.material, o.quantity))
         return output
