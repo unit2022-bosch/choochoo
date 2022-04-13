@@ -1,4 +1,5 @@
-from datetime import datetime, time
+from datetime import datetime
+from datetime import time
 from random import choice
 from random import randrange
 
@@ -14,20 +15,7 @@ class LoadingView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(LoadingView, self).get_context_data(**kwargs)  # mostly useless
-        trains = {
-            choice(
-                "Honza Pepa Ivan Vašek Roman Tomáš Radek Hynek Vojta Vítek Kamil".split()
-            ): {
-                "time": datetime.now(),
-                "materials": [
-                    (randrange(1_000_000_000, 10_000_000_000), randrange(1, 100))
-                    for _ in range(randrange(1, 20))
-                ],
-            }
-            for i in range(10)
-        }
 
-        trains_to_load = Train.trains_to_be_loaded()
         trains = {}
         loading_data = models.Order.get_all_to_load(time(0, 0, 0))
         for route, train, materials in loading_data:
@@ -36,6 +24,7 @@ class LoadingView(TemplateView):
                 "materials": materials.items(),
             }
         context["trains"] = trains
+
         return context
 
 
@@ -45,7 +34,6 @@ class StationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
         context.update(self.create_context_data(kwargs["station_id"]))
-        print(context)
         return context
 
     def create_context_data(self, station_id, context={}):
@@ -55,8 +43,9 @@ class StationView(TemplateView):
                 "departure_time": datetime.now(),
                 "material": randrange(1_000_000_000, 10_000_000_000),
                 "amount": randrange(1, 100),
+                "id": i,
             }
-            for _ in range(randrange(10, 30))
+            for i in range(randrange(10, 30))
         ]
 
         orders = models.Order.get_orders_for_station(station_id)
@@ -102,8 +91,9 @@ class LogisticView(TemplateView):
                 "departure_time": datetime.now(),
                 "material": randrange(1_000_000_000, 10_000_000_000),
                 "amount": randrange(1, 100),
+                "id": 1000 * warehouse + i,
             }
-            for _ in range(randrange(10, 30))
+            for i in range(randrange(10, 30))
         ]
 
     def get_context_data(self, **kwargs):
