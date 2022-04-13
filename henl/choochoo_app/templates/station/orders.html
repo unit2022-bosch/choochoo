@@ -42,7 +42,12 @@
             Ještě neurčeno
         {% endif %}
     </td>
-        <td><button type="submit" onclick="document.getElementById('order-id').value = '{{order.id}}';">Smazat</button></td>
+        <td>
+            <form method="post">
+                {{ csrf_input }}
+                <button type="submit" onclick="document.getElementById('order-id').value = '{{order.id}}';">Doručeno</button>
+            </form>
+        </td>
     </tr>
     {% endfor %}
   </table>
