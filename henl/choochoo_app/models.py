@@ -18,7 +18,10 @@ class Train(models.Model):
     # id is implicit
     human_id = models.CharField(max_length=255)
     last_station = models.ForeignKey(
-        "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
+        "choochoo_app.Station",
+        verbose_name=(""),
+        on_delete=models.CASCADE,
+        null=True,
     )
 
     class Meta:
@@ -66,13 +69,26 @@ class User(models.Model):
         return reverse("User_detail", kwargs={"pk": self.pk})
 
 
+class Path(models.Model):
+    # id is implicit
+    route = models.ForeignKey(
+        "choochoo_app.Route", verbose_name=(""), on_delete=models.CASCADE
+    )
+    source = models.ForeignKey(
+        "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
+    )
+    destination = models.ForeignKey(
+        "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
+    )
+    travel_time = models.PositiveSmallIntegerField()
+
+
 class Route(models.Model):
     # id is implicit
     time = models.TimeField()
     train = models.ForeignKey(
         "choochoo_app.Train", verbose_name=(""), on_delete=models.CASCADE
     )
-    stations = models.ManyToManyField(Station)
 
     class Meta:
         verbose_name = "Route"
