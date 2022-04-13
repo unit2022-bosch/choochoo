@@ -4,6 +4,8 @@ from random import randrange
 
 from django.views.generic import TemplateView
 
+from .forms import OrderForm
+
 
 class LoadingView(TemplateView):
     template_name = "loading/loading.html"
@@ -34,5 +36,6 @@ class StationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
         context["bla"] = "to co chci"
+        context["form"] = OrderForm()
 
         return context
