@@ -4,6 +4,9 @@ from datetime import datetime
 from typing import List, Set
 from django.db import models
 from django.urls import reverse
+import pytz
+
+utc = pytz.UTC
 
 
 class Station(models.Model):
@@ -155,8 +158,9 @@ class Route(models.Model):
 
     def get_stations(self) -> Set[Station]:
         stations = set()
-        for p in self.pathsegment_set.all():
-            stations.add(p.src)
+        for p in PathSegment.objects.all():
+            if p.route_id == self.route_id:
+                stations.add(p.src)
         return stations
 
 
@@ -193,27 +197,30 @@ class Order(models.Model):
         return reverse("Order_detail", kwargs={"pk": self.pk})
 
     @staticmethod
-    def get_all_to_load(time: int):
+    def get_all_to_load(time: datetime):
         assigned_orders = set()
         assigned_routes = set()
         output = []
-        for r in Route.objects.all():
-            if not r.time >= time:
-                continue
-            # TODO filter other timeframe
-            train: Train = r.train
-            if not train.is_in_warehouse:
-                continue
-            orders = {}
-            for s in r.get_stations():
-                for o in Order.objects.all().filter(station=s):
-                    if o in assigned_orders or o.is_complete:
-                        continue
-                    assigned_orders.add(o)
-                    if o.material not in orders:
-                        orders[o.material] = 0
-                    orders[o.material] += o.quantity
-            output.append((r, train, orders))
+        for rID in RouteID.objects.all():
+            routes = Route.objects.all().filter(route_id=rID)
+            routes = sorted(routes, key=lambda x: x.time)
+            for route in routes:
+                if route.time >= time:
+                    continue
+                # TODO filter other timeframe
+                train: Train = route.train
+                if not train.is_in_warehouse:
+                    continue
+                orders = {}
+                for s in route.get_stations():
+                    for o in Order.objects.all().filter(station=s):
+                        if o in assigned_orders or o.is_complete:
+                            continue
+                        assigned_orders.add(o)
+                        if o.material not in orders:
+                            orders[o.material] = 0
+                        orders[o.material] += o.quantity
+                output.append((route, train, orders))
         return output
 
     @staticmethod
