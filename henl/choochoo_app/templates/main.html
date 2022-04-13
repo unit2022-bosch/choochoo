@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{# Main layout of a page, all pages extend this. #}
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% block head %}
+    <!--  include scripts and links for the specified page  -->
+    {% endblock %}
+</head>
+
+<body>
+    {% block nav %}
+    <!--  include nav for the specified page  -->
+    {% endblock %}
+
+    {% block body %}
+    <!--  include body for the specified page  -->
+    {% endblock %}
+</body>
+
+</html>
