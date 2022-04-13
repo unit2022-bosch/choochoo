@@ -1,5 +1,6 @@
 from __future__ import annotations
 from collections import defaultdict
+from datetime import datetime
 from typing import List, Set
 from django.db import models
 from django.urls import reverse
@@ -161,7 +162,8 @@ class Route(models.Model):
 
 class Order(models.Model):
     # id is implicit
-    time = models.DateTimeField()
+    time_added = models.DateTimeField()
+    time_of_departure = models.DateTimeField()
     quantity = models.PositiveIntegerField()
     material = models.ForeignKey(
         "choochoo_app.Material", verbose_name=(""), on_delete=models.CASCADE
@@ -193,10 +195,12 @@ class Order(models.Model):
     @staticmethod
     def get_all_to_load(time: int):
         assigned_orders = set()
+        assigned_routes = set()
         output = []
         for r in Route.objects.all():
             if not r.time >= time:
                 continue
+            # TODO filter other timeframe
             train: Train = r.train
             if not train.is_in_warehouse:
                 continue
@@ -213,9 +217,12 @@ class Order(models.Model):
         return output
 
     @staticmethod
-    def create_order(station_id, material_id, quantity, time):
+    def create_order(station_id, material_id, quantity, time_departure=None):
         o = Order()
-        o.time = time
+        o.time_added = datetime.now()
+        if o.time_of_departure is None:
+            o.time_of_departure = o.time_added
+        o.time_of_departure = time_departure
         o.material = Material.objects.filter(material_id=material_id)[0]
         o.quantity = quantity
         o.station = Station.objects.get(pk=station_id)

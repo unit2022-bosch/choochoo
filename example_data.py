@@ -85,7 +85,8 @@ def add_route(pk: int, route_id: int, train_fk: int, time: datetime):
 
 def add_order(
     pk: int,
-    time: datetime,
+    time_added: datetime,
+    time_departure: datetime,
     quantity: int,
     material: int,
     station: int,
@@ -95,7 +96,8 @@ def add_order(
         "model": "choochoo_app.Order",
         "pk": pk,
         "fields": {
-            "time": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "time_added": time_added.strftime("%Y-%m-%d %H:%M:%S"),
+            "time_of_departure": time_departure.strftime("%Y-%m-%d %H:%M:%S"),
             "quantity": quantity,
             "material": material,
             "station": station,
@@ -118,8 +120,6 @@ def make_example_network():
 
     out.append(add_routeID(0))
     out.append(add_train(0, "Train1", True, 0))
-    out.append(add_route(0, 0, 0, datetime(2021, 4, 13, 17, 0, 0)))
-
     out += add_path(
         0,
         0,
@@ -136,7 +136,6 @@ def make_example_network():
 
     out.append(add_routeID(1))
     out.append(add_train(1, "Train2", True, 0))
-    out.append(add_route(1, 1, 1, datetime(2021, 4, 13, 18, 0, 0)))
     out += add_path(
         6,
         1,
@@ -151,7 +150,6 @@ def make_example_network():
 
     out.append(add_routeID(2))
     out.append(add_train(2, "Train3", True, 0))
-    out.append(add_route(2, 2, 2, datetime(2021, 4, 13, 19, 0, 0)))
     out += add_path(
         11,
         2,
@@ -167,13 +165,41 @@ def make_example_network():
     )
 
     for i in range(100):
+        out.append(
+            add_route(
+                0,
+                0,
+                0,
+                datetime(2021, 4, 13, 17, 0, 0) + timedelta(minutes=15),
+            )
+        )
+        out.append(
+            add_route(
+                1,
+                1,
+                1,
+                datetime(2021, 4, 13, 17, 15, 0) + timedelta(minutes=15),
+            )
+        )
+        out.append(
+            add_route(
+                2,
+                2,
+                2,
+                datetime(2021, 4, 13, 17, 30, 0) + timedelta(minutes=15),
+            )
+        )
+
+    for i in range(100):
         rand_time = datetime.now()
         rand_secs = randint(0, 5000)
         rand_time += timedelta(seconds=rand_secs)
         rand_station = randint(1, 10)
         rand_quant = randint(1, 1000)
         rand_material = randint(0, df.shape[0])
-        o = add_order(i, rand_time, rand_quant, rand_material, rand_station, None)
+        o = add_order(
+            i, rand_time, rand_time, rand_quant, rand_material, rand_station, None
+        )
         out.append(o)
 
     with open("data.json", "w", encoding="utf-8") as fp:
