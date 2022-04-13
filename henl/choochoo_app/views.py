@@ -58,7 +58,19 @@ class StationView(TemplateView):
             }
             for _ in range(randrange(10, 30))
         ]
-        context["orders"] = orders
+
+        orders = models.Order.get_orders_for_station(station_id)
+        orders_data = [
+            {
+                "order_time": order.time,
+                "departure_time": order.time_of_departure,
+                "material": order.material,
+                "amount": order.quantity,
+            }
+            for order in orders
+        ]
+
+        context["orders"] = orders_data
         context["form"] = OrderForm()
         context["multiple_warehouses"] = False
         # context["materials"] = [
@@ -69,8 +81,13 @@ class StationView(TemplateView):
 
     def post(self, request, **kwargs):
         form = OrderForm(request.POST)
-        if form.is_valid():
-            models.Order.create_order(kwargs["station_id"], form.material, form.amount, 0).save()
+
+        models.Order.create_order(
+            kwargs["station_id"],
+            request.POST["material"],
+            request.POST["amount"],
+            datetime.now(),
+        ).save()
 
         return self.get(request, **kwargs)
 

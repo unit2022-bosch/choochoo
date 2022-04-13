@@ -141,7 +141,7 @@ class Route(models.Model):
 
 class Order(models.Model):
     # id is implicit
-    time = models.PositiveBigIntegerField()
+    time = models.DateTimeField()
     quantity = models.PositiveIntegerField()
     material = models.ForeignKey(
         "choochoo_app.Material", verbose_name=(""), on_delete=models.CASCADE
@@ -199,3 +199,7 @@ class Order(models.Model):
         o.station = Station.objects.get(pk=station_id)
         o.user = None
         return o
+
+    @staticmethod
+    def get_orders_for_station(station_id):
+        return Order.objects.all().filter(station_id=station_id)

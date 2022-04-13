@@ -13,3 +13,4 @@ class OrderForm(forms.Form):
 
     def clean(self):
         super().clean()
+        return True
