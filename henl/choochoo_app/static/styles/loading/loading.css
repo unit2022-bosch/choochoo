@@ -11,10 +11,11 @@ button {
   padding: 0;
 }
 
-.train {
+.trains > li {
   background-color: var(--card-bg);
   border-radius: 0.5rem;
   color: var(--card-fg);
+  cursor: pointer;
   margin: 0.5rem;
   padding: 1rem;
   display: flex;
@@ -22,10 +23,14 @@ button {
   gap: 1rem;
 }
 
-.train > .buttons-stack {
-  margin-left: auto;
+.trains > li:nth-of-type(odd) {
+  background-color: var(--card-bg-odd);
 }
 
-.train > time {
+.trains > li:nth-of-type(even) {
+  background-color: var(--card-bg-even);
+}
+
+.trains > li > time {
   font-size: 3rem;
 }

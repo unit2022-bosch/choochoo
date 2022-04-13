@@ -1,6 +1,8 @@
 :root {
   --main-bg: #ccc;
   --card-bg: #335;
+  --card-bg-odd: #335;
+  --card-bg-even: #223;
   --card-fg: #fff;
 }
 

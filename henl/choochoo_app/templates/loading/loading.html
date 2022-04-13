@@ -6,55 +6,18 @@
 
 {% block body %}
 <ol class="trains">
-  <li class="train">
-    <time>12:20</time>
+  {% for id, train in data.items() %}
+  <li>
+    <time>{{train.time.strftime("%H:%M")}}</time>
     <table class="materials">
+      {% for name, amount in train.materials %}
       <tr>
-        <td class="material-name">Dřevo</td>
-        <td class="amount">3</td>
+        <td class="material-name">{{name}}</td>
+        <td class="amount">{{amount}}</td>
       </tr>
-      <tr>
-        <td class="material-name">Kámen</td>
-        <td class="amount">2</td>
-      </tr>
-      <tr>
-        <td class="material-name">Obilí</td>
-        <td class="amount">4</td>
-      </tr>
+      {% endfor %}
     </table>
-    <div class="buttons-stack">
-      <button type="button" class="ready-button">Hotovo</button>
-      <button type="button" class="details-button">Detaily</button>
-    </div>
   </li>
-  <li class="train">
-    <time>12:40</time>
-    <table class="materials">
-      <tr>
-        <td class="material-name">Písek</td>
-        <td class="amount">20</td>
-      </tr>
-      <tr>
-        <td class="material-name">Maso</td>
-        <td class="amount">48</td>
-      </tr>
-      <tr>
-        <td class="material-name">Mikročip</td>
-        <td class="amount">1</td>
-      </tr>
-      <tr>
-        <td class="material-name">Sůl</td>
-        <td class="amount">3000</td>
-      </tr>
-      <tr>
-        <td class="material-name">Dřevo</td>
-        <td class="amount">7</td>
-      </tr>
-    </table>
-    <div class="buttons-stack">
-      <button type="button" class="ready-button">Hotovo</button>
-      <button type="button" class="details-button">Detaily</button>
-    </div>
-  </li>
+  {% endfor %}
 </ol>
 {% endblock %}
