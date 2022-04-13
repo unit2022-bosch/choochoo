@@ -228,3 +228,7 @@ class Order(models.Model):
         o.station = Station.objects.get(pk=station_id)
         o.user = None
         return o
+
+    @staticmethod
+    def get_orders_for_station(station_id):
+        return Order.objects.all().filter(station_id=station_id)
