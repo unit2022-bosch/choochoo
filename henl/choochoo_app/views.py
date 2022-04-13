@@ -3,6 +3,8 @@ from datetime import time
 from random import choice
 from random import randrange
 
+from django.utils.datastructures import MultiValueDictKeyError
+
 from choochoo_app.models import Train
 from django.views.generic import TemplateView
 
@@ -51,7 +53,7 @@ class StationView(TemplateView):
         orders = models.Order.get_orders_for_station(station_id)
         orders_data = [
             {
-                "order_time": order.time,
+                "order_time": order.time_added,
                 "departure_time": order.time_of_departure,
                 "material": order.material,
                 "amount": order.quantity,
@@ -85,16 +87,19 @@ class LogisticView(TemplateView):
     template_name = "logistics/logistics.html"
 
     def orders_of_warehouse(self, warehouse):
-        return [
+        orders = models.Order.get_orders_for_station(warehouse)
+        orders_data = [
             {
-                "order_time": datetime.now(),
-                "departure_time": datetime.now(),
-                "material": randrange(1_000_000_000, 10_000_000_000),
-                "amount": randrange(1, 100),
-                "id": 1000 * warehouse + i,
+                "order_time": order.time_added,
+                "departure_time": order.time_of_departure,
+                "material": order.material,
+                "amount": order.quantity,
+                "id": order.id,
             }
-            for i in range(randrange(10, 30))
+            for order in orders
         ]
+
+        return orders_data
 
     def get_context_data(self, **kwargs):
         context = super(LogisticView, self).get_context_data(**kwargs)
@@ -111,16 +116,31 @@ class LogisticView(TemplateView):
         context["form"] = OrderForm()
         context["orders"] = orders
         context["multiple_warehouses"] = True
-
+        x, y = graph_data()
+        context["chart0_x"] = x
+        context["chart0_y"] = y
         return context
 
     def post(self, request, **kwargs):
         form = OrderForm(request.POST)
-        models.Order.create_order(
-            request.POST["warehouse"],
-            request.POST["material"],
-            request.POST["amount"],
-            datetime.now(),
-        ).save()
-
+        try:
+            models.Order.create_order(
+                request.POST["warehouse"],
+                request.POST["material"],
+                request.POST["amount"],
+                datetime.now(),
+            ).save()
+        except MultiValueDictKeyError:
+            models.Order.objects.get(pk=request.POST["id"]).delete()
         return self.get(request, **kwargs)
+
+
+def graph_data():
+    x = []
+    y = []
+    stations = models.Station.objects.all()
+    for station in stations:
+        x.append(str(station.id))
+        y.append(len(models.Order.objects.filter(station=station)))
+
+    return x, y
