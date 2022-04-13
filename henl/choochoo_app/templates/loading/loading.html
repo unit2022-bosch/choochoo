@@ -7,26 +7,5 @@
 {% endblock %}
 
 {% block body %}
-<ol class="trains">
-  {% for id, train in data.items() %}
-  <li>
-    <div class="departure-time">
-      <label>Čas odjezdu</label>
-      <time>{{train.time.strftime("%H:%M")}}</time>
-    </div>
-    <table class="materials">
-      <tr>
-        <th class="material-name">Materiál</td>
-        <th class="amount">Množství</td>
-      </tr>
-      {% for name, amount in train.materials %}
-      <tr>
-        <td class="material-name">{{name}}</td>
-        <td class="amount">{{amount}}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  </li>
-  {% endfor %}
-</ol>
+{% include "loading/trains.html" %}
 {% endblock %}
