@@ -40,5 +40,6 @@ class StationView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
         context["form"] = OrderForm()
+        context["materials"] = ("ads", "sfgfdg", "5465B4dfg")
 
         return context
