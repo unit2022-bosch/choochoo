@@ -1,8 +1,15 @@
 {% extends "main.html" %}
+
 {% block title %}Hlavní sklad{% endblock %}
+
 {% block head %}
-<link rel="stylesheet" href="/static/styles/station/station.css" />
+<link rel="stylesheet" href="{{ 'static/styles/static/static.css' }}" />
 {% endblock %}
+
+{% block nav %}
+{% include 'station/nav.html' %}
+{% endblock %}
+
 {% block body %}
 <section>
   <table class="orders">
