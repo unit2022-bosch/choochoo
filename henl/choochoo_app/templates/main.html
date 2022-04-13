@@ -3,21 +3,23 @@
 <html lang="cs">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    {% block head %}
-    <!--  include scripts and links for the specified page  -->
-    {% endblock %}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Choo Choo{% endblock %}</title>
+  <link rel="stylesheet" href="/styles/main.css" />
+  {% block head %}
+  {# include scripts and links for the specified page #}
+  {% endblock %}
 </head>
 
 <body>
-    {% block nav %}
-    <!--  include nav for the specified page  -->
-    {% endblock %}
+  {% block nav %}
+  {# include nav for the specified page #}
+  {% endblock %}
 
-    {% block body %}
-    <!--  include body for the specified page  -->
-    {% endblock %}
+  {% block body %}
+  {# include body for the specified page #}
+  {% endblock %}
 </body>
 
 </html>
