@@ -1,12 +1,14 @@
 nav {
   width: 100%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   background-color: var(--card-bg);
   color: var(--card-fg);
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex-flow: row nowrap;
   overflow-x: auto;
-  padding: 0.5rem;
+  padding: 0.75rem;
 }
 
 section {
