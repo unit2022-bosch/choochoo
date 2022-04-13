@@ -7,8 +7,8 @@ class Train(models.Model):
     human_id = models.CharField(max_length=255)
 
     class Meta:
-        verbose_name = _("Train")
-        verbose_name_plural = _("Trains")
+        verbose_name = "Train"
+        verbose_name_plural = "Trains"
 
     def __str__(self):
         return self.name
@@ -22,12 +22,12 @@ class Material(models.Model):
     material_id = models.CharField(max_length=30, primary_key=True)
     human_name = models.CharField(max_length=255)
     order = models.ForeignKey(
-        "choochoo_app.Order", verbose_name=_(""), on_delete=models.CASCADE
+        "choochoo_app.Order", verbose_name=(""), on_delete=models.CASCADE
     )
 
     class Meta:
-        verbose_name = _("Material")
-        verbose_name_plural = _("Materials")
+        verbose_name = "Material"
+        verbose_name_plural = "Materials"
 
     def __str__(self):
         return self.name
@@ -38,8 +38,8 @@ class Material(models.Model):
 
 class User(models.Model):
     class Meta:
-        verbose_name = _("User")
-        verbose_name_plural = _("Users")
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     def __str__(self):
         return self.name
@@ -49,9 +49,10 @@ class User(models.Model):
 
 
 class Station(models.Model):
+    # id is implicit
     class Meta:
-        verbose_name = _("Station")
-        verbose_name_plural = _("Stations")
+        verbose_name = "Station"
+        verbose_name_plural = "Stations"
 
     def __str__(self):
         return self.name
@@ -68,8 +69,8 @@ class Route(models.Model):
     station = models.ManyToManyField(Station)
 
     class Meta:
-        verbose_name = _("Route")
-        verbose_name_plural = _("Routes")
+        verbose_name = "Route"
+        verbose_name_plural = "Routes"
 
     def __str__(self):
         return self.name
@@ -83,15 +84,15 @@ class Order(models.Model):
     time = models.PositiveBigIntegerField()
     quantity = models.PositiveIntegerField()
     station = models.ForeignKey(
-        "choochoo_app.Station", verbose_name=_(""), on_delete=models.CASCADE
+        "choochoo_app.Station", verbose_name=(""), on_delete=models.CASCADE
     )
     user = models.ForeignKey(
-        "choochoo_app.User", verbose_name=_(""), on_delete=models.CASCADE
+        "choochoo_app.User", verbose_name=(""), on_delete=models.CASCADE
     )
 
     class Meta:
-        verbose_name = _("Order")
-        verbose_name_plural = _("Orders")
+        verbose_name = "Order"
+        verbose_name_plural = "Orders"
 
     def __str__(self):
         return self.name
