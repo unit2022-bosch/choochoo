@@ -1,4 +1,5 @@
-from datetime import datetime, time
+from datetime import datetime
+from datetime import time
 from random import choice
 from random import randrange
 
@@ -42,8 +43,9 @@ class StationView(TemplateView):
                 "departure_time": datetime.now(),
                 "material": randrange(1_000_000_000, 10_000_000_000),
                 "amount": randrange(1, 100),
+                "id": i,
             }
-            for _ in range(randrange(10, 30))
+            for i in range(randrange(10, 30))
         ]
         context["orders"] = orders
         context["form"] = OrderForm()
@@ -57,7 +59,9 @@ class StationView(TemplateView):
     def post(self, request, **kwargs):
         form = OrderForm(request.POST)
         if form.is_valid():
-            models.Order.create_order(kwargs["station_id"], form.material, form.amount, 0).save()
+            models.Order.create_order(
+                kwargs["station_id"], form.material, form.amount, 0
+            ).save()
 
         return self.get(request, **kwargs)
 
@@ -72,8 +76,9 @@ class LogisticView(TemplateView):
                 "departure_time": datetime.now(),
                 "material": randrange(1_000_000_000, 10_000_000_000),
                 "amount": randrange(1, 100),
+                "id": 1000 * warehouse + i,
             }
-            for _ in range(randrange(10, 30))
+            for i in range(randrange(10, 30))
         ]
 
     def get_context_data(self, **kwargs):
