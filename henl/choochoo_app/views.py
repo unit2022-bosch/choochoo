@@ -40,6 +40,10 @@ class StationView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StationView, self).get_context_data(**kwargs)  # mostly useless
+        context.update(self.create_context_data(kwargs["station_id"]))
+        return context
+
+    def create_context_data(self, station_id, context={}):
         orders = [
             {
                 "order_time": datetime.now(),
